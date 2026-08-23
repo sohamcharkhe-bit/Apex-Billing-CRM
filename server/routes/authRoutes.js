@@ -65,11 +65,18 @@ router.post('/login', async (req, res) => {
     req.session.lastActivity = Date.now();
     req.session.csrfToken = crypto.randomBytes(32).toString('hex');
 
-    res.json({
-      success: true,
-      message: 'Login successful.',
-      user: req.session.user,
-      csrfToken: req.session.csrfToken
+    // Explicitly save session before responding to ensure cookie and store are written
+    req.session.save((saveErr) => {
+      if (saveErr) {
+        return res.status(500).json({ success: false, error: 'Failed to persist session.' });
+      }
+
+      res.json({
+        success: true,
+        message: 'Login successful.',
+        user: req.session.user,
+        csrfToken: req.session.csrfToken
+      });
     });
   });
 });

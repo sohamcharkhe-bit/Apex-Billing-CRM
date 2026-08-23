@@ -39,10 +39,11 @@ app.use(session({
   secret: config.sessionSecret,
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Tell express-session to trust the reverse proxy
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
-    secure: config.env === 'production',
+    secure: 'auto', // Automatically set secure if req.secure is true via trust proxy
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -91,10 +92,19 @@ app.use(errorHandler);
 if (require.main === module) {
   const PORT = config.port;
   app.listen(PORT, () => {
+    let userCount = 0;
+    try {
+      const row = db.prepare('SELECT COUNT(*) as count FROM users').get();
+      userCount = row ? row.count : 0;
+    } catch (e) {
+      userCount = 'Error checking';
+    }
+
     console.log(`=============================================`);
     console.log(`  ${config.brand.name} Server running on http://localhost:${PORT}`);
     console.log(`  Environment: ${config.env}`);
     console.log(`  Database: ${config.dbPath}`);
+    console.log(`  [Startup Diagnostic] Registered Users in DB: ${userCount}`);
     console.log(`=============================================`);
   });
 }
