@@ -6,6 +6,8 @@ const config = require('./config/config');
 
 // Initialize database
 const db = require('./db/database');
+const autoSeedIfEmpty = require('./db/autoSeed');
+autoSeedIfEmpty(db);
 
 // Middlewares
 const csrfMiddleware = require('./middleware/csrf');

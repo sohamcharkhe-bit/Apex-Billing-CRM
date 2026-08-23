@@ -9,10 +9,10 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
-// Open SQLite database connection
+// Open SQLite database connection (pure leaf module)
 const db = new DatabaseSync(config.dbPath);
 
-// Enable foreign key constraints immediately
+// Enable foreign key constraints and WAL mode
 db.exec('PRAGMA foreign_keys = ON;');
 db.exec('PRAGMA journal_mode = WAL;');
 
@@ -21,7 +21,7 @@ db.pragma = function(pragmaStr) {
   return db.exec('PRAGMA ' + pragmaStr);
 };
 
-// Attach transaction helper compatible with better-sqlite3
+// Attach transaction helper
 db.transaction = function(fn) {
   return function(...args) {
     db.exec('BEGIN IMMEDIATE');
@@ -46,9 +46,5 @@ if (fs.existsSync(schemaPath)) {
   const schemaSql = fs.readFileSync(schemaPath, 'utf8');
   db.exec(schemaSql);
 }
-
-// Auto-seed default accounts if database is newly initialized
-const autoSeedIfEmpty = require('./autoSeed');
-autoSeedIfEmpty(db);
 
 module.exports = db;
