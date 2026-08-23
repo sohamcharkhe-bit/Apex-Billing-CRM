@@ -47,4 +47,8 @@ if (fs.existsSync(schemaPath)) {
   db.exec(schemaSql);
 }
 
+// Auto-seed default accounts if database is newly initialized
+const autoSeedIfEmpty = require('./autoSeed');
+autoSeedIfEmpty(db);
+
 module.exports = db;

@@ -22,6 +22,9 @@ const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
+// Trust reverse proxy (Required for Render, Heroku, AWS load balancers to handle HTTPS cookies)
+app.set('trust proxy', 1);
+
 // Request logging (sanitized, no credential logging)
 if (config.env !== 'test') {
   app.use(morgan(':method :url :status :response-time ms'));
