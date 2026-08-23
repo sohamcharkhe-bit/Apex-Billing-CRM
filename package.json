@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Apex Billing — Billing & Invoice Management System",
   "main": "server/server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
     "start": "node server/server.js",
     "seed": "node server/db/seed.js",
