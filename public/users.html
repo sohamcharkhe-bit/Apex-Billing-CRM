@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Billing — Staff &amp; User Accounts</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo-icon">A</div>
+        <div class="brand-title">Apex Billing</div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Dashboard
+        </a>
+        <a href="/products.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          Products &amp; Services
+        </a>
+        <a href="/invoices.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Invoices
+        </a>
+        <a href="/trash.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Trash
+        </a>
+        <a href="/reports.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Reports
+        </a>
+        <a href="/users.html" class="nav-link active nav-admin-only">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Staff &amp; Users
+        </a>
+      </nav>
+      <div class="sidebar-footer">Apex Billing v1.0</div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="btn-mobile-menu" class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <h2>User Administration</h2>
+        </div>
+        <div class="topbar-right">
+          <div class="user-profile-badge">
+            <div id="topbar-user-avatar" class="user-avatar">A</div>
+            <div class="user-info">
+              <span id="topbar-user-name" class="user-name">Loading...</span>
+              <span id="topbar-user-role" class="user-role-badge">...</span>
+            </div>
+          </div>
+          <button id="btn-logout" class="btn btn-secondary btn-sm">Logout</button>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Staff &amp; User Accounts</h1>
+            <p>Admin control panel for creating staff members, configuring roles, and managing access.</p>
+          </div>
+          <div class="page-actions">
+            <button id="btn-add-user" class="btn btn-primary">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Add Staff Member
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User Details</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Registered</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr><td colspan="5" class="empty-state">Loading user accounts...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit User Modal -->
+  <div id="user-modal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="user-modal-title">Add New Staff Account</h3>
+        <button class="modal-close-btn" data-modal-close>&times;</button>
+      </div>
+      <form id="user-form">
+        <div class="modal-body">
+          <input type="hidden" id="user-id" />
+
+          <div class="form-group">
+            <label for="user-name">Full Name <span class="required-star">*</span></label>
+            <input 
+              type="text" 
+              id="user-name" 
+              required 
+              pattern="[A-Za-z\s.'-]+" 
+              title="Letters, spaces, apostrophes, hyphens, and periods only (no numbers)"
+              placeholder="e.g. Ramesh Kumar" 
+            />
+            <small id="user-name-error" style="font-size: 11px; color: var(--danger); display: none;">
+              Full Name cannot contain numbers.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="user-email">Email Address <span class="required-star">*</span></label>
+            <input type="email" id="user-email" required placeholder="ramesh@apexbilling.com" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="user-role">Role <span class="required-star">*</span></label>
+              <select id="user-role" required>
+                <option value="staff">Staff (Standard Access)</option>
+                <option value="admin">Admin (Full Administrative Access)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="user-status">Status <span class="required-star">*</span></label>
+              <select id="user-status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="user-password">Password <span class="required-star">*</span></label>
+            <input type="password" id="user-password" placeholder="Minimum 6 characters" />
+            <small id="user-password-hint" style="font-size: 11px; color: var(--text-dim); display: none;">Leave blank to keep existing password unchanged.</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" id="btn-save-user" class="btn btn-primary">Save Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/users.js"></script>
+</body>
+</html>

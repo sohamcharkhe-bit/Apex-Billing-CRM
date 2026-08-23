@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Billing — Print Invoice</title>
+  <link rel="stylesheet" href="/css/invoice-print.css" />
+  <style>
+    /* Toolbar styles for viewing on screen */
+    .print-toolbar {
+      background: #0B0C0F;
+      color: #F0F1F5;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .print-btn {
+      background: #4338CA;
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .print-btn:hover { background: #3730A3; }
+    .btn-back {
+      background: #1C1F26;
+      color: #F0F1F5;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 7px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body class="print-body">
+  <!-- Screen-only Toolbar -->
+  <div class="print-toolbar no-print">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a id="btn-back-link" href="/invoices.html" class="btn-back">&larr; Back to App</a>
+      <span id="screen-invoice-title" style="font-weight: 600;">Loading invoice...</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="print-btn" onclick="window.print()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        Print Invoice
+      </button>
+    </div>
+  </div>
+
+  <div style="padding: 24px 12px;">
+    <div class="invoice-paper">
+      <!-- Header -->
+      <div class="invoice-print-header">
+        <div>
+          <div class="print-brand-name">Apex Billing</div>
+          <div class="print-company-info">
+            Plot 42, Cyber City, Sector 29, Gurugram, Haryana 122002<br />
+            Phone: +91 98765 43210 &bull; Email: billing@apexbilling.com<br />
+            GSTIN: 06AAAAA0000A1Z5
+          </div>
+        </div>
+        <div class="print-invoice-meta">
+          <div class="print-invoice-title">TAX INVOICE</div>
+          <div id="print-invoice-num" class="print-invoice-num">INV-0000</div>
+          <div id="print-status-tag" style="font-size: 11px; font-weight: 700; color: #4338CA; text-transform: uppercase; margin-top: 4px;">STATUS: DRAFT</div>
+        </div>
+      </div>
+
+      <!-- Info Grid -->
+      <div class="print-info-grid">
+        <div class="print-billed-to">
+          <div class="print-section-label">Billed To:</div>
+          <div id="print-cust-name" class="print-customer-name">-</div>
+          <div id="print-cust-company" class="print-customer-text" style="font-weight: 600;"></div>
+          <div id="print-cust-email" class="print-customer-text"></div>
+          <div id="print-cust-phone" class="print-customer-text"></div>
+          <div id="print-cust-address" class="print-customer-text" style="margin-top: 4px; max-width: 280px;"></div>
+        </div>
+
+        <div class="print-details" style="text-align: right;">
+          <div class="print-section-label">Invoice Details:</div>
+          <div class="print-customer-text"><strong>Issue Date:</strong> <span id="print-issue-date">-</span></div>
+          <div class="print-customer-text"><strong>Due Date:</strong> <span id="print-due-date">-</span></div>
+          <div class="print-customer-text"><strong>Payment Terms:</strong> <span id="print-payment-terms">-</span></div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th style="width: 30px;">#</th>
+            <th>Description</th>
+            <th style="text-align: right; width: 60px;">Qty</th>
+            <th style="text-align: right; width: 100px;">Unit Price</th>
+            <th style="text-align: right; width: 60px;">Tax</th>
+            <th style="text-align: right; width: 110px;">Total</th>
+          </tr>
+        </thead>
+        <tbody id="print-items-tbody">
+          <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading items...</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Totals Box -->
+      <div class="print-totals-wrapper">
+        <div class="print-totals-box">
+          <div class="print-totals-row">
+            <span>Subtotal:</span>
+            <strong id="print-subtotal">₹0</strong>
+          </div>
+          <div class="print-totals-row">
+            <span>Tax Total (GST):</span>
+            <strong id="print-tax-total">₹0</strong>
+          </div>
+          <div id="print-discount-row" class="print-totals-row" style="display: none; color: #DC2626;">
+            <span>Discount:</span>
+            <strong id="print-discount-total">- ₹0</strong>
+          </div>
+          <div class="print-totals-row grand">
+            <span>Grand Total:</span>
+            <span id="print-grand-total">₹0</span>
+          </div>
+          <div class="print-totals-row" style="margin-top: 6px; color: #059669;">
+            <span>Amount Paid:</span>
+            <strong id="print-paid-amount">₹0</strong>
+          </div>
+          <div class="print-totals-row" style="color: #DC2626; font-weight: 700;">
+            <span>Balance Due:</span>
+            <strong id="print-balance-due">₹0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div id="print-notes-box" class="print-notes-box" style="display: none;">
+        <strong>Notes &amp; Payment Instructions:</strong><br />
+        <span id="print-notes-text"></span>
+      </div>
+
+      <!-- Footer -->
+      <div class="print-footer">
+        Thank you for your business! This is a computer-generated tax invoice issued by Apex Billing.
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+
+      if (!id) {
+        alert('No invoice specified.');
+        window.location.href = '/invoices.html';
+        return;
+      }
+
+      document.getElementById('btn-back-link').href = `/invoice-view.html?id=${id}`;
+
+      try {
+        const res = await apiFetch(`/api/invoices/${id}`);
+        if (!res || !res.invoice) {
+          alert('Invoice not found.');
+          return;
+        }
+
+        const inv = res.invoice;
+        document.title = `Apex Billing — Invoice ${inv.invoice_number}`;
+        document.getElementById('screen-invoice-title').textContent = `Invoice ${inv.invoice_number}`;
+        document.getElementById('print-invoice-num').textContent = inv.invoice_number;
+        document.getElementById('print-status-tag').textContent = `STATUS: ${inv.status.toUpperCase()}`;
+
+        document.getElementById('print-cust-name').textContent = inv.customer_name;
+        document.getElementById('print-cust-company').textContent = inv.company || '';
+        document.getElementById('print-cust-email').textContent = inv.customer_email || '';
+        document.getElementById('print-cust-phone').textContent = normalizeIndianPhone(inv.customer_phone);
+        document.getElementById('print-cust-address').textContent = inv.billing_address || '';
+
+        document.getElementById('print-issue-date').textContent = formatDate(inv.issue_date);
+        document.getElementById('print-due-date').textContent = formatDate(inv.due_date);
+        document.getElementById('print-payment-terms').textContent = inv.payment_terms === 'full' ? 'Full Payment' : 'Due / Credit';
+
+        const tbody = document.getElementById('print-items-tbody');
+        tbody.innerHTML = inv.items.map((item, idx) => `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><strong>${escapeHtml(item.description)}</strong></td>
+            <td style="text-align: right;">${formatNumber(item.quantity)}</td>
+            <td style="text-align: right;">${formatRupee(item.unit_price)}</td>
+            <td style="text-align: right;">${formatNumber(item.tax_rate, true)}</td>
+            <td style="text-align: right; font-weight: 700;">${formatRupee(item.line_total)}</td>
+          </tr>
+        `).join('');
+
+        document.getElementById('print-subtotal').textContent = formatRupee(inv.subtotal);
+        document.getElementById('print-tax-total').textContent = formatRupee(inv.tax_total);
+        
+        if (Number(inv.discount_total) > 0) {
+          document.getElementById('print-discount-row').style.display = 'flex';
+          document.getElementById('print-discount-total').textContent = `- ${formatRupee(inv.discount_total)}`;
+        }
+
+        document.getElementById('print-grand-total').textContent = formatRupee(inv.grand_total);
+        document.getElementById('print-paid-amount').textContent = formatRupee(inv.paid_amount);
+        document.getElementById('print-balance-due').textContent = formatRupee(inv.remaining_balance);
+
+        if (inv.notes) {
+          document.getElementById('print-notes-box').style.display = 'block';
+          document.getElementById('print-notes-text').textContent = inv.notes;
+        }
+      } catch (err) {
+        alert('Error loading printable invoice: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

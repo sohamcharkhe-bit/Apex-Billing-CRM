@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Billing — Create Invoice</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo-icon">A</div>
+        <div class="brand-title">Apex Billing</div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Dashboard
+        </a>
+        <a href="/products.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          Products &amp; Services
+        </a>
+        <a href="/invoices.html" class="nav-link active">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Invoices
+        </a>
+        <a href="/trash.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Trash
+        </a>
+        <a href="/reports.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Reports
+        </a>
+        <a href="/users.html" class="nav-link nav-admin-only" style="display: none;">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Staff &amp; Users
+        </a>
+      </nav>
+      <div class="sidebar-footer">Apex Billing v1.0</div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="btn-mobile-menu" class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <h2>Invoice Builder</h2>
+        </div>
+        <div class="topbar-right">
+          <div class="user-profile-badge">
+            <div id="topbar-user-avatar" class="user-avatar">A</div>
+            <div class="user-info">
+              <span id="topbar-user-name" class="user-name">Loading...</span>
+              <span id="topbar-user-role" class="user-role-badge">...</span>
+            </div>
+          </div>
+          <button id="btn-logout" class="btn btn-secondary btn-sm">Logout</button>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 id="builder-page-title">Create New Invoice</h1>
+            <p>Fill in customer details, select products or services, and choose payment terms.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/invoices.html" class="btn btn-secondary">&larr; Back to Invoices</a>
+          </div>
+        </div>
+
+        <form id="invoice-builder-form">
+          <!-- Customer Information Section (§10, FIX 1) -->
+          <div class="card">
+            <div class="card-header">
+              <h3>1. Customer &amp; Billing Details</h3>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer_name">Customer Name <span class="required-star">*</span></label>
+                <input 
+                  type="text" 
+                  id="customer_name" 
+                  required 
+                  pattern="[A-Za-z\s.'-]+" 
+                  title="Letters, spaces, apostrophes, hyphens, and periods only (no numbers)"
+                  placeholder="e.g. Vikram Joshi" 
+                />
+                <small id="customer_name_error" style="font-size: 11px; color: var(--danger); display: none;">
+                  Customer Name cannot contain numbers.
+                </small>
+              </div>
+              <div class="form-group">
+                <label for="company">Company / Organisation</label>
+                <input 
+                  type="text" 
+                  id="company" 
+                  pattern="[A-Za-z\s.'&,-]+" 
+                  title="Letters, spaces, apostrophes, hyphens, periods, &, and , only (no numbers)"
+                  placeholder="e.g. Joshi &amp; Sons Enterprises" 
+                />
+                <small id="company_error" style="font-size: 11px; color: var(--danger); display: none;">
+                  Company Name cannot contain numbers.
+                </small>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer_email">Customer Email</label>
+                <input type="email" id="customer_email" placeholder="vikram@joshienterprises.in" />
+              </div>
+              <div class="form-group">
+                <label for="customer_phone">Customer Phone (Indian Mobile)</label>
+                <input type="text" id="customer_phone" placeholder="9876543210 or +91 98765 43210" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="billing_address">Billing Address</label>
+              <textarea id="billing_address" rows="2" placeholder="Full postal billing address..."></textarea>
+            </div>
+          </div>
+
+          <!-- Dates and Terms Section (§21, §25, FIX 2) -->
+          <div class="card">
+            <div class="card-header">
+              <h3>2. Invoice Dates &amp; Agreed Payment Terms</h3>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="issue_date">Issue Date <span class="required-star">*</span></label>
+                <input type="date" id="issue_date" required />
+                <small style="font-size: 11px; color: var(--text-dim);">No past dates allowed. Earliest is today.</small>
+              </div>
+              <div class="form-group">
+                <label for="due_date">Due Date <span class="required-star">*</span></label>
+                <input type="date" id="due_date" required />
+                <small style="font-size: 11px; color: var(--text-dim);">Must be &ge; Issue Date, max 1 year out.</small>
+              </div>
+            </div>
+
+            <!-- Payment Terms Selection (§21) -->
+            <div style="margin-top: 12px; padding: 16px; background-color: var(--surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-md);">
+              <label style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                Select Payment Terms:
+              </label>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                Choose whether full settlement is collected immediately or customer pays on credit terms before due date.
+              </p>
+              <div class="terms-action-group">
+                <button type="button" id="term-btn-full" class="btn btn-secondary">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Full Payment (Paid Immediately)
+                </button>
+                <button type="button" id="term-btn-credit" class="btn btn-secondary active btn-term-credit">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  Due / Credit (Pay Later by Due Date)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Line Items Section (§15, FIX 6) -->
+          <div class="card">
+            <div class="card-header">
+              <h3>3. Products &amp; Services Line Items</h3>
+              <button type="button" id="btn-add-item-row" class="btn btn-secondary btn-sm">
+                + Add Line Item
+              </button>
+            </div>
+
+            <div class="item-row-header">
+              <div>Item (Select from Catalog)</div>
+              <div>Quantity</div>
+              <div>Unit Price (₹)</div>
+              <div>Tax Rate (%)</div>
+              <div style="text-align: right;">Line Total</div>
+              <div></div>
+            </div>
+
+            <div id="line-items-container">
+              <!-- Item rows injected dynamically -->
+            </div>
+
+            <!-- Totals & Notes Layout -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+              <div>
+                <div class="form-group">
+                  <label for="notes">Notes &amp; Bank Instructions</label>
+                  <textarea id="notes" rows="4" placeholder="e.g. Please wire funds to HDFC Bank A/C: 123456789, IFSC: HDFC0001234."></textarea>
+                </div>
+              </div>
+
+              <div>
+                <div class="invoice-summary-box">
+                  <div class="summary-line">
+                    <span>Subtotal:</span>
+                    <strong id="calc-subtotal">₹0</strong>
+                  </div>
+                  <div class="summary-line">
+                    <span>Tax Total (GST):</span>
+                    <strong id="calc-tax-total">₹0</strong>
+                  </div>
+                  <div class="summary-line" style="align-items: center;">
+                    <label for="discount_total" style="margin-bottom: 0;">Discount (₹):</label>
+                    <input type="number" id="discount_total" min="0" step="any" value="0" style="width: 130px; padding: 4px 8px; text-align: right;" />
+                  </div>
+                  <div class="summary-line grand-total">
+                    <span>Grand Total:</span>
+                    <span id="calc-grand-total" style="color: var(--primary);">₹0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Action -->
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+              <a href="/invoices.html" class="btn btn-secondary">Cancel</a>
+              <button type="submit" id="btn-save-invoice" class="btn btn-primary btn-lg">
+                Finalize &amp; Save Invoice
+              </button>
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/invoice-builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Billing — Invoice Details</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo-icon">A</div>
+        <div class="brand-title">Apex Billing</div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Dashboard
+        </a>
+        <a href="/products.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          Products &amp; Services
+        </a>
+        <a href="/invoices.html" class="nav-link active">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Invoices
+        </a>
+        <a href="/trash.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Trash
+        </a>
+        <a href="/reports.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Reports
+        </a>
+        <a href="/users.html" class="nav-link nav-admin-only" style="display: none;">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Staff &amp; Users
+        </a>
+      </nav>
+      <div class="sidebar-footer">Apex Billing v1.0</div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="btn-mobile-menu" class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <h2>Invoice Overview</h2>
+        </div>
+        <div class="topbar-right">
+          <div class="user-profile-badge">
+            <div id="topbar-user-avatar" class="user-avatar">A</div>
+            <div class="user-info">
+              <span id="topbar-user-name" class="user-name">Loading...</span>
+              <span id="topbar-user-role" class="user-role-badge">...</span>
+            </div>
+          </div>
+          <button id="btn-logout" class="btn btn-secondary btn-sm">Logout</button>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px;">
+              <h1 id="view-invoice-number" style="font-family: var(--font-mono); font-size: 2rem;">INV-0000</h1>
+              <div id="view-invoice-status-badge"></div>
+            </div>
+            <p>
+              Payment Terms: <strong id="view-payment-terms" style="color: var(--primary);">Due / Credit</strong> &bull;
+              Issued: <span id="view-issue-date">-</span> &bull;
+              Due: <span id="view-due-date">-</span>
+            </p>
+          </div>
+          <div class="page-actions" style="flex-wrap: wrap;">
+            <button id="btn-open-payment-modal" class="btn btn-success">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              Record Payment
+            </button>
+            <a id="btn-print-invoice" href="#" target="_blank" class="btn btn-secondary">
+              <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+              Print Invoice
+            </a>
+            <a id="btn-download-pdf" href="#" class="btn btn-secondary">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              PDF
+            </a>
+            <a id="btn-edit-invoice" href="#" class="btn btn-secondary">Edit</a>
+            <button id="btn-trash-view-invoice" class="btn btn-danger">Trash</button>
+          </div>
+        </div>
+
+        <!-- Customer & Summary Grid -->
+        <div class="invoice-detail-grid">
+          <!-- Main Left Column -->
+          <div>
+            <!-- Customer Details Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Billed To Customer</h3>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px;">Customer Name</div>
+                  <div id="cust-name" style="font-weight: 700; font-size: 15px; color: var(--text-primary);">-</div>
+                  <div id="cust-company" style="color: var(--text-muted); font-size: 13px;">-</div>
+                </div>
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px;">Contact Details</div>
+                  <div id="cust-email" style="color: var(--text-primary);">-</div>
+                  <div id="cust-phone" style="color: var(--text-muted); font-family: var(--font-mono);">-</div>
+                </div>
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px;">Billing Address</div>
+                  <div id="cust-address" style="color: var(--text-muted); line-height: 1.4;">-</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Line Items Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Invoice Line Items</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Description</th>
+                      <th>Qty</th>
+                      <th>Unit Price</th>
+                      <th>Tax %</th>
+                      <th style="text-align: right;">Line Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="view-items-tbody">
+                    <tr><td colspan="6" class="empty-state">Loading items...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Notes Card -->
+            <div id="view-notes-container" class="card" style="display: none;">
+              <div class="card-header">
+                <h3>Notes &amp; Terms</h3>
+              </div>
+              <p id="view-notes" style="color: var(--text-primary); white-space: pre-wrap;"></p>
+            </div>
+
+            <!-- Payment Audit Trail Card (§23) -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Payment Audit History (Append-Only)</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Payment Date</th>
+                      <th>Method</th>
+                      <th>Reference Note</th>
+                      <th>Recorded By</th>
+                      <th style="text-align: right;">Amount Paid</th>
+                    </tr>
+                  </thead>
+                  <tbody id="view-payments-tbody">
+                    <tr><td colspan="5" class="empty-state">Loading payments...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column Summary -->
+          <div>
+            <div class="card" style="position: sticky; top: 88px;">
+              <div class="card-header">
+                <h3>Financial Summary</h3>
+              </div>
+              <div class="invoice-summary-box" style="background: transparent; border: none; padding: 0;">
+                <div class="summary-line">
+                  <span>Subtotal:</span>
+                  <strong id="view-subtotal">₹0</strong>
+                </div>
+                <div class="summary-line">
+                  <span>Tax (GST):</span>
+                  <strong id="view-tax-total">₹0</strong>
+                </div>
+                <div id="view-discount-row" class="summary-line" style="display: none;">
+                  <span>Discount:</span>
+                  <strong id="view-discount-total" style="color: var(--danger);">- ₹0</strong>
+                </div>
+                <div class="summary-line grand-total">
+                  <span>Grand Total:</span>
+                  <strong id="view-grand-total" style="color: var(--primary);">₹0</strong>
+                </div>
+                <div class="summary-line" style="padding-top: 12px; color: var(--success);">
+                  <span>Total Paid:</span>
+                  <strong id="view-paid-amount">₹0</strong>
+                </div>
+                <div class="summary-line balance-due" style="padding-top: 12px;">
+                  <span>Balance Due:</span>
+                  <strong id="view-balance-due">₹0</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Record Payment Modal (§19, §22) -->
+  <div id="payment-modal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Record Payment</h3>
+        <button class="modal-close-btn" data-modal-close>&times;</button>
+      </div>
+      <form id="payment-form">
+        <div class="modal-body">
+          <div style="background: var(--surface-elevated); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted);">Current Balance Due:</span>
+            <strong id="pay-balance-display" style="font-size: 1.1rem; color: var(--warning);">₹0</strong>
+          </div>
+
+          <div class="form-group">
+            <label for="pay-amount">Payment Amount (₹) <span class="required-star">*</span></label>
+            <input type="number" id="pay-amount" required min="0.01" step="any" placeholder="Amount" />
+            <small style="font-size: 11px; color: var(--text-dim);">Overpayment protection active: cannot exceed remaining balance.</small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="pay-date">Payment Date <span class="required-star">*</span></label>
+              <input type="date" id="pay-date" required />
+            </div>
+            <div class="form-group">
+              <label for="pay-method">Payment Method <span class="required-star">*</span></label>
+              <select id="pay-method" required>
+                <option value="bank_transfer">Bank Transfer (NEFT/IMPS/RTGS)</option>
+                <option value="cash">Cash</option>
+                <option value="card">Credit / Debit Card</option>
+                <option value="cheque">Cheque</option>
+                <option value="other">Other / UPI</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="pay-reference">Reference / Transaction Note</label>
+            <input type="text" id="pay-reference" placeholder="e.g. UTR #1234567890 or Cheque #987654" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" id="btn-save-payment" class="btn btn-success">Confirm &amp; Record Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Trash Modal -->
+  <div id="trash-modal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Move Invoice to Trash</h3>
+        <button class="modal-close-btn" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Move invoice <strong id="trash-invoice-num-modal"></strong> to Trash?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+        <button type="button" id="btn-confirm-view-trash" class="btn btn-danger">Move to Trash</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/invoice-view.js"></script>
+</body>
+</html>

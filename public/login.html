@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Billing — Secure Login</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-brand-logo">A</div>
+      <h1>Apex Billing</h1>
+      <p>Billing &amp; Invoice Management System</p>
+    </div>
+
+    <div id="auth-alert" class="auth-alert"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Work Email <span class="required-star">*</span></label>
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="name@company.com" />
+      </div>
+
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label for="password">Password <span class="required-star">*</span></label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+      </div>
+
+      <button type="submit" id="btn-submit-login" class="btn btn-primary btn-lg" style="width: 100%;">
+        Sign In
+      </button>
+    </form>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>
