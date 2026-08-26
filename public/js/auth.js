@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Check if already logged in
   try {
-    const meRes = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    const meRes = await fetch('/api/auth/me', { credentials: 'include' });
     const meData = await meRes.json().catch(() => ({}));
     if (meRes.ok && meData.user) {
       window.location.href = '/dashboard.html';
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          credentials: 'same-origin',
+          credentials: 'include',
           body: JSON.stringify({ email, password })
         });
 

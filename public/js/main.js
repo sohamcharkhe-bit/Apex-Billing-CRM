@@ -93,7 +93,7 @@ function renderStatusBadge(status) {
  */
 async function apiFetch(url, options = {}) {
   const opts = {
-    credentials: 'same-origin',
+    credentials: 'include',
     ...options,
     headers: {
       'Accept': 'application/json',

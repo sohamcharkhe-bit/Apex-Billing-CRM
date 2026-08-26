@@ -10,6 +10,7 @@ const autoSeedIfEmpty = require('./db/autoSeed');
 autoSeedIfEmpty(db);
 
 // Middlewares
+const cors = require('cors');
 const csrfMiddleware = require('./middleware/csrf');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -27,6 +28,16 @@ const app = express();
 // Trust reverse proxy (Required for Render, Heroku, AWS load balancers to handle HTTPS cookies)
 app.set('trust proxy', 1);
 
+// Enable Cross-Origin Resource Sharing for Netlify, custom domains, and local dev
+app.use(cors({
+  origin: (origin, callback) => {
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept']
+}));
+
 // Request logging (sanitized, no credential logging)
 if (config.env !== 'test') {
   app.use(morgan(':method :url :status :response-time ms'));
@@ -36,16 +47,17 @@ if (config.env !== 'test') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
+// Session configuration (supports same-origin, Netlify proxy, and cross-origin)
+const isProduction = config.env === 'production';
 app.use(session({
   secret: config.sessionSecret,
   resave: false,
   saveUninitialized: false,
-  proxy: true, // Tell express-session to trust the reverse proxy
+  proxy: true, // Tell express-session to trust reverse proxies (Render / Netlify)
   cookie: {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: 'auto', // Automatically set secure if req.secure is true via trust proxy
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction ? true : 'auto',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
