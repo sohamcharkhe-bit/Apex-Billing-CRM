@@ -2,9 +2,15 @@ services:
   - type: web
     name: apex-billing-crm
     runtime: node
-    plan: free
+    # NOTE: Change plan from 'free' to 'starter' (or higher) in Render dashboard
+    # to enable Persistent Disk support. Free plan does NOT support disks.
+    plan: starter
     buildCommand: npm install
     startCommand: npm start
+    disk:
+      name: apex-billing-data
+      mountPath: /data
+      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: 22.14.0
@@ -12,3 +18,5 @@ services:
         value: production
       - key: SESSION_SECRET
         generateValue: true
+      - key: DB_PATH
+        value: /data/apex_billing.sqlite

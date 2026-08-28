@@ -10,6 +10,7 @@ if (!fs.existsSync(dbDir)) {
 }
 
 // Open SQLite database connection (pure leaf module)
+console.log(`[DB] Opening database at: ${config.dbPath}`);
 const db = new DatabaseSync(config.dbPath);
 
 // Enable foreign key constraints and WAL mode
